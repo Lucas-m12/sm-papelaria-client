@@ -2,6 +2,7 @@
 
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,14 +13,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-export default function Home() {
+export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const pathname = usePathname();
 
   const products = [
     {
-      id: 1,
+      id: '1',
       image: "/next.svg",
       name: "Acme Lamp",
       description: "A stylish and energy-efficient lamp for your home.",
@@ -27,7 +28,7 @@ export default function Home() {
       quantity: 100,
     },
     {
-      id: 2,
+      id: '2',
       image: "/next.svg",
       name: "Acme Backpack",
       description: "A durable and comfortable backpack for everyday use.",
@@ -35,7 +36,7 @@ export default function Home() {
       quantity: 50,
     },
     {
-      id: 3,
+      id: '3',
       image: "/next.svg",
       name: "Acme Water Bottle",
       description: "A reusable and eco-friendly water bottle for on-the-go.",
@@ -43,7 +44,7 @@ export default function Home() {
       quantity: 75,
     },
     {
-      id: 4,
+      id: '4',
       image: "/next.svg",
       name: "Acme Mug",
       description: "A sturdy and stylish mug for your daily coffee.",
@@ -51,7 +52,7 @@ export default function Home() {
       quantity: 120,
     },
     {
-      id: 5,
+      id: '5',
       image: "/next.svg",
       name: "Acme Notebook",
       description: "A high-quality notebook for all your writing needs.",
@@ -59,7 +60,7 @@ export default function Home() {
       quantity: 80,
     },
     {
-      id: 6,
+      id: '6',
       image: "/next.svg",
       name: "Acme Pen",
       description: "A smooth-writing pen that's perfect for everyday use.",
@@ -67,7 +68,7 @@ export default function Home() {
       quantity: 200,
     },
     {
-      id: 7,
+      id: '7',
       image: "/next.svg",
       name: "Acme Umbrella",
       description: "A durable and stylish umbrella to keep you dry.",
@@ -75,7 +76,7 @@ export default function Home() {
       quantity: 60,
     },
     {
-      id: 8,
+      id: '8',
       image: "/next.svg",
       name: "Acme Keychain",
       description: "A fun and practical keychain to accessorize your keys.",
@@ -83,7 +84,7 @@ export default function Home() {
       quantity: 150,
     },
     {
-      id: 9,
+      id: '9',
       image: "/next.svg",
       name: "Acme Candle",
       description: "A soy-based candle with a relaxing scent.",
@@ -91,7 +92,7 @@ export default function Home() {
       quantity: 90,
     },
     {
-      id: 10,
+      id: '10',
       image: "/next.svg",
       name: "Acme Coaster",
       description: "A set of stylish coasters to protect your furniture.",
@@ -103,7 +104,6 @@ export default function Home() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = products.slice(indexOfFirstItem, indexOfLastItem)
   const totalPages = Math.ceil(products.length / itemsPerPage)
-  
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber)
@@ -113,6 +113,10 @@ export default function Home() {
     setItemsPerPage(+value)
     setCurrentPage(1)
   };
+
+  const handleDeleteProduct = (productId: string) => {
+    console.log(`Deleting product with id: ${productId}`)
+  }
 
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
@@ -182,10 +186,32 @@ export default function Home() {
                             <FilePenIcon className="h-4 w-4" />
                             <span className="sr-only">Editar</span>
                           </Button>
-                          <Button variant="outline" size="icon" className="text-red-500">
-                            <TrashIcon className="h-4 w-4" />
-                            <span className="sr-only">Deletar</span>
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="icon" className="text-red-500">
+                                <TrashIcon className="h-4 w-4" />
+                                <span className="sr-only">Deletar</span>
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Tem certeza que deseja deletar esse produto ?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Essa ação não pode ser desfeita e todos os dados relacionados a esse produto serão perdidos.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteProduct(product.id)}
+                                >
+                                  Deletar
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </TableCell>
                     </TableRow>
