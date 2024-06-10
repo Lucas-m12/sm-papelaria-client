@@ -1,12 +1,8 @@
 'use client';
 
-import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { Button } from "@/components/ui/button";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { BellIcon, FilePenIcon, TrashIcon } from "lucide-react";
+import { BellIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -117,7 +113,7 @@ export default function Home() {
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
-        <div className="flex h-full max-h-screen flex-col gap-2">
+        <aside className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-[60px] items-center border-b px-6">
             <Link href="#" className="flex items-center gap-2 font-semibold" prefetch={false}>
               <Image src='/logo.svg' width={42} height={42} alt="logo sm papelaria" />
@@ -131,108 +127,12 @@ export default function Home() {
           <div className="flex-1 overflow-auto py-2">
             <Sidebar />
           </div>
-        </div>
+        </aside>
       </div>
 
       <section className="flex flex-col">
-        <Header />
-
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-          <div className="flex items-center">
-            <h1 className="font-semibold text-lg md:text-2xl">Produtos</h1>
-            <Button className="ml-auto" size="sm" asChild>
-              <Link href="/produtos/novo">
-                Adicionar produto
-              </Link>
-            </Button>
-          </div>
-
-          <div className="border shadow-sm rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Imagem</TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Descrição</TableHead>
-                  <TableHead>Preço</TableHead>
-                  <TableHead>Quantidade</TableHead>
-                  <TableHead>Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {
-                  products.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell>
-                        <Image
-                          src={product.image}
-                          width="64"
-                          height="64"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{product.name}</TableCell>
-                      <TableCell>{product.description}</TableCell>
-                      <TableCell>{product.price}</TableCell>
-                      <TableCell>{product.quantity}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button variant="outline" size="icon">
-                            <FilePenIcon className="h-4 w-4" />
-                            <span className="sr-only">Editar</span>
-                          </Button>
-                          <Button variant="outline" size="icon" className="text-red-500">
-                            <TrashIcon className="h-4 w-4" />
-                            <span className="sr-only">Deletar</span>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-            <div className="flex items-center justify-between border-t p-4">
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Mostrando {indexOfFirstItem + 1} a {indexOfLastItem} de {products.length} produtos
-              </div>
-              <div className="flex items-center gap-2">
-                <Select
-                  value={itemsPerPage.toString()}
-                  onValueChange={handleItemsPerPageChange}
-                // className="w-20"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="10" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="20">20</SelectItem>
-                    <SelectItem value="30">30</SelectItem>
-                    <SelectItem value="40">40</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink href="#">1</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext href="#" />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            </div>
-          </div>
+          <h1>Em desenvolvimento</h1>
         </main>
       </section>
     </div>
