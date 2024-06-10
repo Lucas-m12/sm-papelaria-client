@@ -4,22 +4,24 @@ import { Product, productSchema } from "@/schemas/product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 
 export const useNewProduct = () => {
   const { toast } = useToast();
   const router = useRouter();
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const productMutation = useMutation({
-    mutationFn: newProductMutation,
+    mutationFn: (product: Product) => newProductMutation(product, onUploadProgress),
     retry: 3,
     retryDelay: 2000,
     onSuccess: () => {
       toast({
         title: "Produto cadastrado com sucesso",
       });
+      onUploadProgress(100);
       router.push("/produtos");
     },
     onError: (error) => {
@@ -43,25 +45,30 @@ export const useNewProduct = () => {
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    console.log({ acceptedFiles })
     form.setValue("image", acceptedFiles[0]);
   }, [form]);
 
-  
   const dropzone = useDropzone({
+    accept: {
+      "image/*": [".png", ".jpg", ".jpeg"],
+    },
     multiple: false,
     onDrop,
   });
 
+  const onUploadProgress = (progress: number) => {
+    setUploadProgress(progress);
+  }
+
   const onFormSubmit = (values: Product) => {
-    console.log({ values });
     productMutation.mutate(values);
   };
-
-  const onSuccessRegisterProduct = () => { };
 
   return {
     form,
     dropzone,
+    uploadProgress,
     onFormSubmit,
     isLoading: productMutation.isPending,
   }

@@ -1,17 +1,38 @@
 import { Product } from "@/schemas/product-schema";
+import { api } from "@/services/api";
+import axios from "axios";
 
-export const newProductMutation = async (product: Product) => {
-  const baseUrl = process.env.NEXT_API_BASE_URL;
-  const response = await fetch(`${baseUrl}/products`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(product),
+export const newProductMutation = async (
+  product: Product,
+  onProgress?: (progress: number) => void
+) => {
+  const { data } = await api.post<CreateProductResponse>('/products', {
+    code: product.code,
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    filename: product.image?.name
   });
-  if (!response.ok) {
-    throw new Error(`Status: ${response.status}`);
+  
+  if (data.presignedUrl) {
+    await axios.put(
+      data.presignedUrl,
+      product.image,
+      {
+        headers: {
+          'Content-Type': product.image?.type
+        },
+        onUploadProgress({ total, loaded }) {
+          const percentage = Math.round((loaded * 100) / (total ?? 0));
+          onProgress?.(percentage);
+        },
+      }
+    );
   }
-  const data = await response.json();
   return data;
+}
+
+interface CreateProductResponse {
+  product: Product;
+  presignedUrl?: string;
 }

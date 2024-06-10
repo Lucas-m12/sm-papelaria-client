@@ -3,12 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { useNewProduct } from "@/hooks/pages/use-new-product";
 import { LoaderCircleIcon, UploadIcon } from "lucide-react";
 
 export const NewProductForm = () => {
-  const { form, onFormSubmit, dropzone, isLoading } = useNewProduct();
+  const { form, onFormSubmit, dropzone, isLoading, uploadProgress } = useNewProduct();
 
   return (
     <Form {...form}>
@@ -84,9 +85,25 @@ export const NewProductForm = () => {
         </div>
         <div className="grid gap-2">
           <div {...dropzone.getRootProps()} className="focus:shadow-outline w-full min-h-[320px]  appearance-none rounded border py-2 px-3 leading-tight bg-transparent text-gray-400 shadow focus:outline-none border-dashed flex items-center justify-center flex-col gap-3 hover:text-gray-950 transition-all delay-75 cursor-pointer">
-            <p className="text-center">Arraste a imagem do produto aqui</p>
-            <UploadIcon />
+            {dropzone.isDragAccept}
+            <p
+              className={
+                `text-center ${dropzone.isDragActive ? "text-gray-950" : ""} ${dropzone.isDragReject ? "text-red-500" : ""} ${dropzone.isDragAccept ? "text-green-500 disabled" : ""}`
+              }
+            >
+              Arraste a imagem do produto aqui
+            </p>
+            <UploadIcon
+              className={
+              `${dropzone.isDragActive ? "text-gray-950" : ""} ${dropzone.isDragReject ? "text-red-500" : ""} ${dropzone.isDragAccept ? "text-green-500" : ""}`
+              }
+            />
             <input id="image" {...dropzone.getInputProps()} />
+          </div>
+          <div>
+            <Progress
+              value={uploadProgress}
+            />
           </div>
         </div>
         <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
