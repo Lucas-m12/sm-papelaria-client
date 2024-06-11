@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { newProductMutation } from "@/data/mutations/new-product-mutation";
-import { ProductCreate, productSchema } from "@/schemas/product-schema";
+import { ProductCreateWithoutId, productSchema } from "@/schemas/product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ export const useNewProduct = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const productMutation = useMutation({
-    mutationFn: (product: ProductCreate) =>
+    mutationFn: (product: ProductCreateWithoutId) =>
       newProductMutation(product, onUploadProgress),
     retry: 3,
     retryDelay: 2000,
@@ -34,8 +34,8 @@ export const useNewProduct = () => {
     },
   });
 
-  const form = useForm<ProductCreate>({
-    resolver: zodResolver(productSchema),
+  const form = useForm<ProductCreateWithoutId>({
+    resolver: zodResolver(productSchema.omit({ id: true })),
     defaultValues: {
       category: "",
       code: "",
@@ -43,6 +43,7 @@ export const useNewProduct = () => {
       image: undefined,
       name: "",
     },
+    shouldFocusError: true,
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -61,7 +62,7 @@ export const useNewProduct = () => {
     setUploadProgress(progress);
   }
 
-  const onFormSubmit = (values: ProductCreate) => {
+  const onFormSubmit = (values: ProductCreateWithoutId) => {
     productMutation.mutate(values);
   };
 

@@ -13,6 +13,10 @@ const productCreateSchema = productSchema.extend({
   image: z.instanceof(File).optional(),
 });
 
+const noId = productCreateSchema.omit({ id: true });
+
 export type ProductCreate = z.infer<typeof productCreateSchema>;
+
+export type ProductCreateWithoutId = z.infer<typeof noId>;
 
 export type Product = z.infer<typeof productSchema>;
