@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { newProductMutation } from "@/data/mutations/new-product-mutation";
-import { Product, productSchema } from "@/schemas/product-schema";
+import { ProductCreate, productSchema } from "@/schemas/product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,8 @@ export const useNewProduct = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const productMutation = useMutation({
-    mutationFn: (product: Product) => newProductMutation(product, onUploadProgress),
+    mutationFn: (product: ProductCreate) =>
+      newProductMutation(product, onUploadProgress),
     retry: 3,
     retryDelay: 2000,
     onSuccess: () => {
@@ -29,11 +30,11 @@ export const useNewProduct = () => {
         title: "Erro ao cadastrar produto",
         description: error.message,
         variant: "destructive",
-      })
+      });
     },
   });
 
-  const form = useForm<Product>({
+  const form = useForm<ProductCreate>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       category: "",
@@ -41,11 +42,10 @@ export const useNewProduct = () => {
       description: "",
       image: undefined,
       name: "",
-    }
+    },
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log({ acceptedFiles })
     form.setValue("image", acceptedFiles[0]);
   }, [form]);
 
@@ -61,7 +61,7 @@ export const useNewProduct = () => {
     setUploadProgress(progress);
   }
 
-  const onFormSubmit = (values: Product) => {
+  const onFormSubmit = (values: ProductCreate) => {
     productMutation.mutate(values);
   };
 
