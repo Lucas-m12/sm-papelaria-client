@@ -1,9 +1,9 @@
-import { Product } from "@/schemas/product-schema";
+import { Product, ProductCreate } from "@/schemas/product-schema";
 import { api } from "@/services/api";
 import axios from "axios";
 
 export const newProductMutation = async (
-  product: Product,
+  product: ProductCreate,
   onProgress?: (progress: number) => void
 ) => {
   const { data } = await api.post<CreateProductResponse>('/products', {
@@ -11,7 +11,7 @@ export const newProductMutation = async (
     name: product.name,
     description: product.description,
     category: product.category,
-    filename: product.image?.name
+    filename: product.image?.name,
   });
   
   if (data.presignedUrl) {
